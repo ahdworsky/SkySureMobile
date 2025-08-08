@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkySure Inspections</title>
+  <style>
+    /* --- Base / reset --- */
+    :root{
+      --brand:#0E1F2F;
+      --accent:#EA5A1F;
+      --ink:#1A2A3A;
+      --space: clamp(12px, 2.5vw, 24px);
+      --round: 12px;
+      --shadow: 0 4px 10px rgba(0,0,0,.12);
+      --nav-h: 56px; /* mobile nav height */
+    }
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: Arial, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", sans-serif;
+      line-height:1.5;
+      color:var(--ink);
+      background: url('Background.png') no-repeat center center / cover;
+      /* iOS Safari + Android: avoid janky "fixed" backgrounds on mobile */
+      background-attachment: scroll;
+      padding-top: var(--nav-h); /* room for fixed nav */
+      overflow-x:hidden;
+    }
+
+    /* --- Nav --- */
+    .nav-container{
+      position:fixed; inset:0 auto auto 0;
+      top:0; left:0; right:0; height:var(--nav-h);
+      background:var(--brand);
+      z-index:1001;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 var(--space);
+    }
+    .brand{
+      display:flex; align-items:center; gap:.5rem; color:#fff; text-decoration:none; font-weight:700;
+    }
+    .brand img{ height:28px; width:auto; display:block; }
+    .menu-btn{
+      background:none; border:0; color:#fff; font-size:1.5rem; line-height:1; cursor:pointer;
+    }
+    nav{
+      position:fixed;
+      top:var(--nav-h); left:0; right:0;
+      background:rgba(14,31,47,.97);
+      transform:translateY(-100%);
+      transition:transform .25s ease;
+      z-index:1000;
+    }
+    nav.open{ transform:translateY(0); }
+    nav ul{ list-style:none; margin:0; padding:var(--space); display:grid; gap:.75rem; }
+    nav a{
+      color:#fff; text-decoration:none; font-weight:700; display:block; padding:.75rem 1rem; border-radius:10px;
+    }
+    nav a:active, nav a:focus{ outline:2px solid #fff; outline-offset:2px; }
+
+    /* --- Header logo (center on desktop, small fixed on scroll/sections) --- */
+    header{
+      text-align:center;
+      padding: clamp(24px, 8vw, 80px) var(--space) 0;
+      position:relative;
+    }
+    #main-logo{
+      max-width:min(70vw, 360px);
+      height:auto;
+      margin-inline:auto;
+      transition: all .35s ease;
+      background:transparent;
+    }
+    .logo-fixed-small{
+      max-width: 140px !important;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      margin:0 !important;
+      z-index:1002;
+    }
+
+    /* --- CTA button --- */
+    .cta-top-left{
+      position:fixed; top: calc(var(--nav-h) + 8px); left: 8px; z-index:1003;
+    }
+    .cta-top-left button{
+      background:var(--accent); color:#fff; border:0; border-radius:10px;
+      padding:10px 14px; font-weight:700; cursor:pointer; box-shadow:var(--shadow);
+    }
+
+    /* --- Sections --- */
+    section{
+      padding: var(--space);
+      margin: 0 auto;
+      max-width: 1100px;
+      background: transparent;
+      position:relative;
+    }
+    h2{ color:var(--brand); margin: 0 0 .5rem; }
+    p{ margin: .5rem 0 0; }
+
+    /* --- Services grid --- */
+    .service-grid{
+      display:grid;
+      gap: var(--space);
+      grid-template-columns: 1fr; /* mobile-first */
+      margin-top: var(--space);
+    }
+    .service-box{
+      background: rgba(255,255,255,.85);
+      padding: clamp(16px, 3vw, 24px);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .bottom-row{ /* merge into grid on mobile; keep class for minimal changes */
+      display: contents;
+    }
+
+    /* --- Modal form --- */
+    #appointment-form{
+      display:none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index:1005;
+      padding: var(--space);
+    }
+    .modal-card{
+      background:#fff; border-radius:16px; max-width: 560px; width:100%;
+      margin: 8vh auto 0; padding: clamp(16px, 3vw, 24px); position:relative; box-shadow: var(--shadow);
+    }
+    .close-btn{
+      position:absolute; top:10px; right:12px; font-size:24px; font-weight:700; cursor:pointer; line-height:1;
+    }
+    .modal-card h3{ margin:0 0 .5rem; color:var(--brand); }
+    #appointment-form input,
+    #appointment-form select,
+    #appointment-form textarea{
+      width:100%; margin:8px 0; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit;
+    }
+    #appointment-form button[type="submit"]{
+      background:var(--brand); color:#fff; border:0; border-radius:10px; padding:12px 16px; font-weight:700; cursor:pointer; width:100%;
+    }
+
+    /* --- Confirmation popup --- */
+    #confirmation-popup{
+      display:none;
+      position: fixed; inset: 0; z-index:1006; background: rgba(0,0,0,.45);
+      padding: var(--space);
+    }
+    .confirm-card{
+      background:#fff; border:2px solid var(--brand); border-radius:16px;
+      max-width: 420px; width:100%; margin: 20vh auto 0;
+      padding: clamp(18px, 3vw, 28px); text-align:center; position:relative; box-shadow: var(--shadow);
+    }
+
+    /* --- Footer --- */
+    footer{
+      background:var(--brand); color:#fff; text-align:center; padding: 16px;
+      font-size:.95rem;
+    }
+
+    /* --- Larger screens --- */
+    @media (min-width: 700px){
+      :root{ --nav-h: 64px; }
+      nav{
+        position:static; transform:none; background:transparent;
+        height:var(--nav-h); display:flex; align-items:center; justify-content:flex-end;
+      }
+      nav ul{ display:flex; gap:1rem; padding:0; }
+      .menu-btn{ display:none; }
+      .nav-container{ justify-content:space-between; }
+      .service-grid{ grid-template-columns: repeat(2, 1fr); }
+      .bottom-row{ display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space); }
+      #main-logo{ max-width: 380px; }
+    }
+    @media (min-width: 1000px){
+      .service-grid{ grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed top bar -->
+  <div class="nav-container">
+    <a class="brand" href="#top" aria-label="SkySure Home">
+      <!-- Optional tiny logo in navbar; swap src if you want -->
+      <img src="Final_Logo_Transparent.png" alt="" />
+      <span>SkySure</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="primaryNav" aria-label="Toggle menu">☰</button>
+    <nav id="primaryNav" aria-label="Primary">
+      <ul>
+        <li><a href="#top">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-top-left">
+    <button onclick="openForm()">Schedule an Inspection</button>
+  </div>
+
+  <!-- Header -->
+  <header id="top">
+    <img id="main-logo" src="Final_Logo_Transparent.png" alt="SkySure Inspections Logo" />
+  </header>
+
+  <!-- Services -->
+  <section id="services" style="scroll-margin-top: calc(var(--nav-h) + 16px);">
+    <h2>Services</h2>
+    <div class="service-grid">
+      <div class="service-box">
+        <h3>Roof Snapshot</h3>
+        <p>High-resolution aerial imagery for a quick overview of your roof’s condition.</p>
+        <p><strong>$125 / $175</strong></p>
+      </div>
+      <div class="service-box">
+        <h3>Detailed Roof Report</h3>
+        <p>In-depth drone imaging documenting wear or damage—great for buyers or sellers.</p>
+        <p><strong>$150 / $200</strong></p>
+      </div>
+      <div class="service-box">
+        <h3>Realtor Marketing Add-On</h3>
+        <p>Aerial footage to elevate your listing with dramatic views and visual clarity.</p>
+        <p><strong>$50 Add-On</strong></p>
+      </div>
+
+      <!-- bottom row merges into grid on mobile -->
+      <div class="service-box">
+        <h3>Land Survey Flyover</h3>
+        <p>Visualize property lines, terrain, and boundaries for undeveloped or large parcels.</p>
+        <p><strong>Quote Required</strong></p>
+      </div>
+      <div class="service-box">
+        <h3>Insurance Claim Documentation</h3>
+        <p>Capture detailed roof damage imagery to support faster, smoother claim resolution.</p>
+        <p><strong>$150 Flat Rate</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" style="scroll-margin-top: calc(var(--nav-h) + 16px);">
+    <h2>About SkySure</h2>
+    <p>
+      SkySure Inspections was created to give buyers, sellers, homeowners, and real estate agents peace of mind by offering a bird’s-eye view of one of the most expensive components of a home—the roof. With drone technology, we provide sharp aerial imagery that shows roof condition, potential damage, and layout before making an offer or listing a property. Our mission is to deliver fast, visual confidence from above.
+    </p>
+  </section>
+
+  <footer>
+    FAA Part 107 Certified | Insured | Not a home inspection – just a clear, sky-high view of what matters most.<br><br>
+    <strong>Email:</strong> aaron@skysure.com<br>
+    <strong>Phone:</strong> 704-885-5795<br>
+    <strong>Location:</strong> Charlotte & surrounding areas<br>
+    <strong>Hours:</strong> M–F 9am–8pm | Sat 9am–6pm | Sun 9am–12pm
+  </footer>
+
+  <!-- Modal: Appointment Form -->
+  <div id="appointment-form" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeForm()" aria-label="Close">&times;</span>
+      <h3 id="formTitle">Schedule an Inspection</h3>
+      <form id="inspection-form" action="https://formspree.io/f/xnnzvgyl" method="POST">
+        <input type="text" name="Name" placeholder="Name" required />
+        <input type="email" name="Email" placeholder="Email" required />
+        <input type="tel" name="Phone" placeholder="Phone #" inputmode="tel" />
+        <select name="Service">
+          <option value="Roof Snapshot">Roof Snapshot</option>
+          <option value="Detailed Roof Report">Detailed Roof Report</option>
+          <option value="Realtor Marketing Add-On">Realtor Marketing Add-On</option>
+          <option value="Land Survey Flyover">Land Survey Flyover</option>
+          <option value="Insurance Claim Documentation">Insurance Claim Documentation</option>
+        </select>
+        <input type="text" name="Timeframe" placeholder="Preferred Timeframe" />
+        <textarea name="Comments" placeholder="Additional Comments" rows="4"></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation -->
+  <div id="confirmation-popup" role="alertdialog" aria-labelledby="confirmTitle">
+    <div class="confirm-card">
+      <span class="close-btn" onclick="closePopup()" aria-label="Close">&times;</span>
+      <p id="confirmTitle"><strong>Request received.</strong><br>Someone will contact you shortly.</p>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const primaryNav = document.getElementById('primaryNav');
+    menuBtn.addEventListener('click', () => {
+      const isOpen = primaryNav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Modal helpers
+    const modal = document.getElementById('appointment-form');
+    const confirmPopup = document.getElementById('confirmation-popup');
+    const formElement = document.getElementById('inspection-form');
+
+    function openForm(){ modal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+    function closeForm(){ modal.style.display = 'none'; document.body.style.overflow = ''; }
+    function closePopup(){ confirmPopup.style.display = 'none'; }
+
+    // Close modal on backdrop click or Esc
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeForm(); });
+    confirmPopup.addEventListener('click', (e)=>{ if(e.target === confirmPopup) closePopup(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ closeForm(); closePopup(); }});
+
+    // Form submit -> Formspree + confirmation
+    if (formElement) {
+      formElement.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(formElement);
+        try{
+          const res = await fetch(formElement.action, { method:'POST', body:formData, headers:{ 'Accept':'application/json' }});
+          if(res.ok){
+            closeForm();
+            confirmPopup.style.display = 'block';
+            formElement.reset();
+          }else{
+            alert("There was a problem submitting the form. Please try again later.");
+          }
+        }catch(err){
+          alert("There was an error sending your request.");
+          console.error(err);
+        }
+      });
+    }
+
+    // Logo resize/move when reaching Services
+    const logo = document.getElementById('main-logo');
+    const services = document.getElementById('services');
+    function onScroll(){
+      const triggerY = services.offsetTop - (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) + 16);
+      if (window.scrollY >= triggerY) logo.classList.add('logo-fixed-small');
+      else logo.classList.remove('logo-fixed-small');
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll(); // run once on load
+  </script>
+</body>
+</html>
