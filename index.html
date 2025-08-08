@@ -74,6 +74,7 @@
       cursor: pointer;
     }
 
+    /* Modal overlay + card */
     #appointment-form {
       display: none;
       position: fixed;
@@ -122,6 +123,7 @@
       width: 100%;
     }
 
+    /* Confirmation overlay + card */
     #confirmation-popup {
       display: none;
       position: fixed;
@@ -152,13 +154,12 @@
       line-height: 1;
     }
 
-    /* Header no longer fixed so it won't cover the nav */
+    /* Header (not fixed) */
     header {
       background-color: transparent;
       padding: 10px 20px 0;
       text-align: center;
-      position: relative; /* was fixed */
-      top: auto;
+      position: relative;
       width: 100%;
       height: auto;
       z-index: 1002;
@@ -169,15 +170,18 @@
       display: block;
       margin: 0 auto;
       background: transparent;
-      transition: all 0.5s ease;
+      transition: all 0.35s ease;
     }
-    .logo-fixed-small {
+
+    /* Small corner logo (used briefly, then hidden) */
+    .logo-fixed-small{
       max-width: 150px !important;
       position: fixed;
       top: 14px;
       right: 14px;
       margin: 0 !important;
       z-index: 1008;
+      transition: transform .35s ease, opacity .35s ease;
     }
 
     section {
@@ -189,7 +193,14 @@
     }
     h2 { color: var(--brand); }
 
-    /* White card utility for readability */
+    /* Stronger About header for visibility */
+    #about h2{
+      font-weight: 800;
+      font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+      letter-spacing: .2px;
+    }
+
+    /* White card for readability */
     .content-card{
       background: rgba(255,255,255,.92);
       padding: 20px;
@@ -275,7 +286,6 @@
       src="Final_Logo_Transparent.png"
       alt="SkySure Inspections Logo"
       onerror="this.onerror=null; this.src='Final_Logo.png';"
-      class="logo-large"
       style="background-color: transparent;"
     />
   </header>
@@ -357,19 +367,19 @@
       closePopup();
     }});
 
+    // Form submit -> Formspree + confirmation
     const formElement = document.getElementById("inspection-form");
     if (formElement) {
-      formElement.addEventListener("submit", function(event) {
+      formElement.addEventListener("submit", async function(event) {
         event.preventDefault();
-
         const formData = new FormData(formElement);
-
-        fetch(formElement.action, {
-          method: "POST",
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        }).then(response => {
-          if (response.ok) {
+        try{
+          const res = await fetch(formElement.action, {
+            method: "POST",
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+          });
+          if (res.ok) {
             document.getElementById("appointment-form").style.display = "none";
             document.getElementById("confirmation-popup").style.display = "block";
             document.body.style.overflow = "";
@@ -377,23 +387,46 @@
           } else {
             alert("There was a problem submitting the form. Please try again later.");
           }
-        }).catch(error => {
+        }catch(err){
           alert("There was an error sending your request.");
-          console.error(error);
-        });
+          console.error(err);
+        }
       });
     }
 
-    // Logo resize/move when reaching Services
+    // ----- Logo: brief "peek" when Services/About are reached, then hide -----
     const logo = document.getElementById('main-logo');
     const services = document.getElementById('services');
-    function onScroll(){
-      const triggerY = services.offsetTop - 120; // room for top bar
-      if (window.scrollY >= triggerY) logo.classList.add('logo-fixed-small');
-      else logo.classList.remove('logo-fixed-small');
+    const about = document.getElementById('about');
+
+    function peekLogo(duration = 1200){
+      logo.classList.add('logo-fixed-small');
+      clearTimeout(window.__logoTimer);
+      window.__logoTimer = setTimeout(() => {
+        logo.classList.remove('logo-fixed-small');
+      }, duration);
     }
-    window.addEventListener('scroll', onScroll, { passive:true });
-    onScroll(); // run once on load
+
+    // Show on nav clicks
+    document.querySelectorAll('a[href="#services"], a[href="#about"]').forEach(a => {
+      a.addEventListener('click', () => peekLogo());
+    });
+
+    // Show on manual scroll into sections
+    const observer = new IntersectionObserver((entries) => {
+      for (const e of entries){
+        if (e.isIntersecting) peekLogo();
+      }
+    }, {
+      root: null,
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0.01
+    });
+    observer.observe(services);
+    observer.observe(about);
+
+    // (Important) Remove any old scroll handler that kept the logo sticky
+    // If you had one previously, it's now intentionally gone.
   </script>
 </body>
 </html>
