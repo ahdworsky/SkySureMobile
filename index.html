@@ -16,15 +16,14 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding-top: 220px; /* moved logo up */
+      padding-top: 180px; /* moved logo further up */
       color: var(--ink);
       background: url('Background.png') no-repeat center center fixed;
       background-size: cover;
-      background-attachment: scroll; /* avoid iOS jank */
+      background-attachment: scroll;
       overflow-x: hidden;
     }
 
-    /* --- Top Nav --- */
     .nav-container {
       background-color: var(--brand);
       position: fixed; top: 0; left: 0; right: 0;
@@ -35,45 +34,34 @@
     nav { width:100%; text-align:center; font-weight:700; }
     nav a { color:#fff; text-decoration:none; margin:0 15px; padding:8px 0; display:inline-block; }
 
-    /* --- CTA --- */
     .cta-top-left { position: fixed; top: 60px; left: 12px; z-index:1003; }
     .cta-top-left button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; }
 
-    /* --- Modal (Appointment Form) --- */
     #appointment-form { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1006; padding:20px; }
     #appointment-form .modal-card{ background:#fff; padding:20px; border-radius:12px; max-width:560px; width:100%; margin:8vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
     #appointment-form .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
     #appointment-form input, #appointment-form select, #appointment-form textarea{ width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit; }
     #appointment-form button{ background:var(--brand); color:#fff; border:0; border-radius:10px; padding:12px 16px; font-weight:700; cursor:pointer; width:100%; }
 
-    /* --- Confirmation Popup --- */
     #confirmation-popup{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1007; padding:20px; text-align:center; }
     #confirmation-popup .confirm-card{ background:#fff; border:2px solid var(--brand); border-radius:12px; padding:28px; max-width:420px; width:100%; margin:20vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
     #confirmation-popup .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
 
-    /* --- Header --- */
     header { text-align:center; padding: 16px 20px 0; }
     #main-logo { max-width:320px; height:auto; display:block; margin:0 auto; transition: all .35s ease; }
 
-    /* --- Sections --- */
     section { padding: 30px; margin-top: 24px; }
     h2 { color: var(--brand); }
-
-    /* Stronger About header */
     #about h2{ font-weight:800; font-size:clamp(1.6rem, 3.5vw, 2.1rem); letter-spacing:.2px; }
 
-    /* --- Services Grid --- */
     .service-grid{ display:grid; grid-template-columns:1fr; gap:30px; margin:0 auto; max-width:1000px; }
     .service-box{ background:#ffffffcc; padding:25px; border-radius:15px; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,.1); position:relative; }
 
-    /* --- About Card --- */
     .content-card{ background:rgba(255,255,255,.92); padding:20px; border-radius:16px; box-shadow:0 4px 10px rgba(0,0,0,.12); max-width:900px; margin:0 auto; position:relative; }
 
-    /* --- Corner logos outside boxes --- */
     .card-wrap{ position:relative; }
-    .corner-logo{ position:absolute; width: clamp(54px, 10vw, 80px); height:auto; opacity:.95; pointer-events:none; }
-    /* Anchor outside the top-right corner: a bit up and to the right */
-    .corner-outside{ top:-10px; right:0; transform: translate(40%, -50%); }
+    .corner-logo{ position:absolute; width: clamp(64px, 12vw, 96px); height:auto; opacity:.95; pointer-events:none; }
+    .corner-outside{ top:-16px; right:0; transform: translate(40%, -50%); }
 
     footer { background:var(--brand); color:#fff; text-align:center; padding:15px; font-size:.9rem; }
 
@@ -174,7 +162,6 @@
 
   <div style="height: 300px;"></div>
 
-  <!-- Footer -->
   <footer>
     FAA Part 107 Certified | Insured | Not a home inspection – just a clear, sky-high view of what matters most.<br><br>
     <strong>Email:</strong> aaron@skysure.com<br>
@@ -183,7 +170,6 @@
     <strong>Hours:</strong> M–F 9am–8pm | Sat 9am–6pm | Sun 9am–12pm
   </footer>
 
-  <!-- Confirmation Popup -->
   <div id="confirmation-popup" role="alertdialog" aria-labelledby="confirmTitle">
     <div class="confirm-card">
       <span class="close-btn" onclick="closePopup()" aria-label="Close">&times;</span>
