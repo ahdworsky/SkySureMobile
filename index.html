@@ -24,8 +24,7 @@
     }
     .nav-container {
       background-color: var(--brand);
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       z-index: 1005;
       display: flex; align-items: center; justify-content: center;
       padding: 8px 10px;
@@ -100,7 +99,35 @@
       }
       #main-logo { max-width: 240px; margin-bottom: 0; }
       section { padding: 20px; margin-top: 16px; }
-      .service-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+      /* --- Services layout: 2 cards on row 1, 3 cards on row 2 --- */
+      .service-grid {
+        display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+        max-width: 1000px; margin: 0 auto;
+      }
+      /* first two items (children 1 & 2) take ~50% each */
+      .service-grid > *:nth-child(-n+2) { flex: 1 1 min(48%, 520px); }
+      /* remaining three items take ~33% each */
+      .service-grid > *:nth-child(n+3) { flex: 1 1 min(31%, 340px); }
+
+      /* push the floating corner logo to the right edge in landscape */
+      #services .corner-logo.corner-outside {
+        left: auto; right: -8px; transform: translate(60%, -50%);
+        z-index: 1;
+      }
+      .cta-top-left { top: calc(56px + env(safe-area-inset-top, 0px)); }
+      nav { gap: clamp(10px, 2.8vw, 20px); }
+      nav a { font-size: clamp(.85rem, 1.8vw, .95rem); }
+    }
+      .nav-container {
+        padding: calc(env(safe-area-inset-top, 0px) + 8px) calc(env(safe-area-inset-right, 0px) + 16px) 8px calc(env(safe-area-inset-left, 0px) + 16px);
+      }
+      #main-logo {
+        max-width: 240px; margin-bottom: 0;
+        position: absolute; right: 20px; left: auto; transform: none;
+      }
+      section { padding: 20px; margin-top: 16px; }
+      .service-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
       .cta-top-left { top: calc(56px + env(safe-area-inset-top, 0px)); }
       nav { gap: clamp(10px, 2.8vw, 20px); }
       nav a { font-size: clamp(.85rem, 1.8vw, .95rem); }
@@ -120,11 +147,9 @@
       <a href="#about">About</a>
     </nav>
   </div>
-
   <div class="cta-top-left">
     <button onclick="toggleForm()">Schedule an Inspection</button>
   </div>
-
   <div id="appointment-form" role="dialog" aria-modal="true" aria-labelledby="formTitle">
     <div class="modal-card">
       <span class="close-btn" onclick="toggleForm()" aria-label="Close">&times;</span>
@@ -146,11 +171,9 @@
       </form>
     </div>
   </div>
-
   <header id="top">
     <img id="main-logo" src="Final_Logo_Transparent.png" alt="SkySure Inspections Logo" onerror="this.onerror=null; this.src='Final_Logo.png';" />
   </header>
-
   <section id="services" style="scroll-margin-top: 96px;">
     <h2>Services</h2>
     <div class="service-grid">
@@ -184,7 +207,6 @@
       </div>
     </div>
   </section>
-
   <section id="about" style="scroll-margin-top: 96px;">
     <h2>About SkySure</h2>
     <div class="card-wrap">
@@ -196,9 +218,7 @@
       <img class="corner-logo corner-outside" src="Final_Logo_Transparent.png" alt="" onerror="this.style.display='none'" />
     </div>
   </section>
-
   <div style="height: 300px;"></div>
-
   <footer>
     FAA Part 107 Certified | Insured | Not a home inspection – just a clear, sky-high view of what matters most.<br><br>
     <strong>Email:</strong> aaron@skysure.com<br>
@@ -206,14 +226,12 @@
     <strong>Location:</strong> Charlotte & surrounding areas<br>
     <strong>Hours:</strong> M–F 9am–8pm | Sat 9am–6pm | Sun 9am–12pm
   </footer>
-
   <div id="confirmation-popup" role="alertdialog" aria-labelledby="confirmTitle">
     <div class="confirm-card">
       <span class="close-btn" onclick="closePopup()" aria-label="Close">&times;</span>
       <p id="confirmTitle"><strong>Request received.</strong><br>Someone will contact you shortly.</p>
     </div>
   </div>
-
   <script>
     function toggleForm() {
       const overlay = document.getElementById("appointment-form");
@@ -222,11 +240,9 @@
       document.body.style.overflow = isOpen ? "" : "hidden";
     }
     function closePopup() { document.getElementById("confirmation-popup").style.display = "none"; }
-
     const modalOverlay = document.getElementById('appointment-form');
     modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) toggleForm(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ if(modalOverlay.style.display === 'block') toggleForm(); closePopup(); }});
-
     const formElement = document.getElementById("inspection-form");
     if (formElement) {
       formElement.addEventListener("submit", async function(event) {
