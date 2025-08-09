@@ -2,98 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SkySure Inspections</title>
   <style>
-    html { scroll-behavior: smooth; }
+    /* ---- Base ---- */
+    html { scroll-behavior: smooth; -webkit-text-size-adjust:100%; }
     :root{
       --brand:#0E1F2F;  /* blue */
       --accent:#EA5A1F; /* orange */
       --ink:#1A2A3A;
+      --safe-top: env(safe-area-inset-top);
     }
-    body {
+    *{ box-sizing:border-box; }
+    body{
       font-family: Arial, sans-serif;
-      margin: 0;
-      /* main logo moved up so it's not cut off on iPhone 15 */
-      padding-top: 180px;
-      color: var(--ink);
-      background: url('Background.png') no-repeat center center fixed;
-      background-size: cover;
-      background-attachment: scroll; /* avoid iOS jank */
-      overflow-x: hidden;
+      margin:0; color:var(--ink);
+      background:url('Background.png') no-repeat center center fixed;
+      background-size:cover; background-attachment:scroll; /* mobile-friendly */
+      padding-top:180px; /* raise hero logo area */
+      overflow-x:hidden;
     }
+    img, video{ max-width:100%; height:auto; display:block; }
 
-    /* Top Bar */
-    .nav-container {
-      background-color: var(--brand);
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 1005;
-      display: flex; align-items: center; justify-content: center;
-      padding: 8px 10px;
+    /* ---- Top bar ---- */
+    .nav-container{
+      position:fixed; top:0; left:0; right:0;
+      background:var(--brand); z-index:1005;
+      padding:calc(8px + var(--safe-top)) 10px 8px;
+      display:flex; align-items:center; justify-content:center;
     }
-    nav { width:100%; text-align:center; font-weight:700; }
-    /* Keep Home / Services / About white in top bar */
-    nav a { color:#fff; text-decoration:none; margin:0 15px; padding:8px 0; display:inline-block; }
+    nav{ width:100%; text-align:center; font-weight:700; }
+    nav a{ color:#fff; text-decoration:none; margin:0 15px; padding:12px 8px; display:inline-block; }
 
-    /* CTA button: blue with white wording */
-    .cta-top-left { position: fixed; top: 60px; left: 12px; z-index:1003; }
-    .cta-top-left button { background:var(--brand); color:#fff; border:0; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; }
+    /* ---- CTA ---- */
+    .cta-top-left{ position:fixed; top:calc(60px + var(--safe-top)); left:12px; z-index:1003; }
+    .cta-top-left button{ background:var(--brand); color:#fff; border:0; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; min-height:44px; }
 
-    /* Modal (Appointment Form) */
-    #appointment-form { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1006; padding:20px; }
+    /* ---- Modal (appointment) ---- */
+    #appointment-form{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1006; padding:20px; }
     #appointment-form .modal-card{ background:#fff; padding:20px; border-radius:12px; max-width:560px; width:100%; margin:8vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
     #appointment-form .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
     #appointment-form input, #appointment-form select, #appointment-form textarea{ width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit; }
     #appointment-form button{ background:var(--brand); color:#fff; border:0; border-radius:10px; padding:12px 16px; font-weight:700; cursor:pointer; width:100%; }
 
-    /* Confirmation Popup */
+    /* ---- Confirmation popup ---- */
     #confirmation-popup{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1007; padding:20px; text-align:center; }
     #confirmation-popup .confirm-card{ background:#fff; border:2px solid var(--brand); border-radius:12px; padding:28px; max-width:420px; width:100%; margin:20vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
     #confirmation-popup .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
 
-    /* Header */
-    header { text-align:center; padding: 8px 20px 0; }
-    #main-logo { max-width:320px; height:auto; display:block; margin:0 auto -8px; transition: all .35s ease; }
+    /* ---- Header / hero logo ---- */
+    header{ text-align:center; padding:8px 20px 0; }
+    #main-logo{ max-width:320px; height:auto; margin:0 auto -8px; position:relative; top:-16px; transition:all .35s ease; }
 
-    /* Sections */
-    section { padding: 30px; margin-top: 24px; }
-    h2 { color: var(--brand); }
-    /* Middle & bottom headings in orange */
-    #services h2, #about h2 { color: var(--accent); }
-    #about h2{ font-weight:800; font-size:clamp(1.6rem, 3.5vw, 2.1rem); letter-spacing:.2px; }
+    /* ---- Sections ---- */
+    section{ padding:30px; margin-top:24px; }
+    .scrolled-section{ scroll-margin-top: calc(96px + var(--safe-top)); }
+    h2{ color:var(--brand); }
+    #services h2, #about h2{ color:var(--accent); font-weight:800; }
 
-    /* Services grid */
+    /* ---- Services ---- */
     .service-grid{ display:grid; grid-template-columns:1fr; gap:30px; margin:0 auto; max-width:1000px; }
-    .service-box{ background:#ffffffcc; padding:25px; border-radius:15px; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,0.1); position:relative; }
+    .service-box{ background:#ffffffcc; padding:25px; border-radius:15px; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,.1); position:relative; }
 
-    /* About white card */
+    /* ---- About card ---- */
     .content-card{ background:rgba(255,255,255,.92); padding:20px; border-radius:16px; box-shadow:0 4px 10px rgba(0,0,0,.12); max-width:900px; margin:0 auto; position:relative; }
 
-    /* Wrappers for anchoring corner logos OUTSIDE boxes */
+    /* ---- Anchored corner logos (outside) ---- */
     .card-wrap{ position:relative; }
-    .corner-logo{ position:absolute; width: clamp(72px, 14vw, 110px); height:auto; opacity:.95; pointer-events:none; }
-    /* place logos slightly outside & above the top-right corner */
-    .corner-outside{ top:-28px; right:0; transform: translate(40%, -50%); }
+    .corner-logo{ position:absolute; width:clamp(95px, 18vw, 140px); height:auto; pointer-events:none; filter:drop-shadow(0 0 8px rgba(0,0,0,.85)); }
+    .corner-outside{ top:-32px; right:0; transform:translate(40%, -50%); }
 
-    /* Footer */
-    footer { background:var(--brand); color:#fff; text-align:center; padding:15px; font-size:.9rem; }
+    /* ---- Footer ---- */
+    footer{ background:var(--brand); color:#fff; text-align:center; padding:15px; font-size:.9rem; }
 
-    /* Responsive */
-    @media (min-width: 700px){ .service-grid{ grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1000px){ .service-grid{ grid-template-columns: repeat(3, 1fr); } }
+    /* ---- Responsive ---- */
+    @media (min-width:700px){ .service-grid{ grid-template-columns:repeat(2, 1fr); } }
+    @media (min-width:1000px){ .service-grid{ grid-template-columns:repeat(3, 1fr); } }
   </style>
 </head>
 <body>
-  <!-- Top Bar -->
+  <!-- Top bar -->
   <div class="nav-container">
     <nav>
-      <a href="#top">Home</a>
+      <!-- Home goes to site root (adjust if using project pages) -->
+      <a href="https://skysureinspections.com">Home</a>
       <a href="#services">Services</a>
       <a href="#about">About</a>
     </nav>
   </div>
 
-  <!-- CTA button -->
+  <!-- CTA -->
   <div class="cta-top-left">
     <button onclick="toggleForm()">Schedule an Inspection</button>
   </div>
@@ -104,9 +102,9 @@
       <span class="close-btn" onclick="toggleForm()" aria-label="Close">&times;</span>
       <h3 id="formTitle">Schedule an Inspection</h3>
       <form id="inspection-form" action="https://formspree.io/f/xnnzvgyl" method="POST">
-        <input type="text" name="Name" placeholder="Name" required>
-        <input type="email" name="Email" placeholder="Email" required>
-        <input type="tel" name="Phone" placeholder="Phone #" inputmode="tel">
+        <input type="text" name="Name" placeholder="Name" required autocomplete="name" />
+        <input type="email" name="Email" placeholder="Email" required autocomplete="email" />
+        <input type="tel" name="Phone" placeholder="Phone #" inputmode="tel" autocomplete="tel" />
         <select name="Service">
           <option value="Roof Snapshot">Roof Snapshot</option>
           <option value="Detailed Roof Report">Detailed Roof Report</option>
@@ -114,23 +112,23 @@
           <option value="Land Survey Flyover">Land Survey Flyover</option>
           <option value="Insurance Claim Documentation">Insurance Claim Documentation</option>
         </select>
-        <input type="text" name="Timeframe" placeholder="Preferred Timeframe">
+        <input type="text" name="Timeframe" placeholder="Preferred Timeframe" autocomplete="off" />
         <textarea name="Comments" placeholder="Additional Comments" rows="4"></textarea>
         <button type="submit">Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- Header / Hero Logo -->
+  <!-- Header / hero logo -->
   <header id="top">
     <img id="main-logo" src="Final_Logo_Transparent.png" alt="SkySure Inspections Logo" onerror="this.onerror=null; this.src='Final_Logo.png';" />
   </header>
 
-  <!-- Services Section -->
-  <section id="services" style="scroll-margin-top: 96px;">
+  <!-- Services -->
+  <section id="services" class="scrolled-section">
     <h2>Services</h2>
     <div class="service-grid">
-      <!-- Roof Snapshot with anchored logo outside top-right corner -->
+      <!-- Roof Snapshot (with anchored corner logo outside top-right) -->
       <div class="card-wrap">
         <div class="service-box" id="roof-snapshot">
           <h3>Roof Snapshot</h3>
@@ -166,8 +164,8 @@
     </div>
   </section>
 
-  <!-- About Section -->
-  <section id="about" style="scroll-margin-top: 96px;">
+  <!-- About -->
+  <section id="about" class="scrolled-section">
     <h2>About SkySure</h2>
     <div class="card-wrap">
       <div class="content-card">
@@ -175,7 +173,7 @@
           SkySure Inspections was created to give buyers, sellers, homeowners, and real estate agents peace of mind by offering a bird’s-eye view of one of the most expensive components of a home—the roof. With drone technology, we provide sharp aerial imagery that shows roof condition, potential damage, and layout before making an offer or listing a property. Our mission is to deliver fast, visual confidence from above.
         </p>
       </div>
-      <!-- anchored logo outside top-right of the white About card -->
+      <!-- anchored corner logo outside top-right of the about card -->
       <img class="corner-logo corner-outside" src="Final_Logo_Transparent.png" alt="" onerror="this.style.display='none'" />
     </div>
   </section>
@@ -200,34 +198,35 @@
   </div>
 
   <script>
-    function toggleForm() {
-      const overlay = document.getElementById("appointment-form");
-      const isOpen = overlay.style.display === "block";
-      overlay.style.display = isOpen ? "none" : "block";
-      document.body.style.overflow = isOpen ? "" : "hidden";
+    function toggleForm(){
+      const overlay = document.getElementById('appointment-form');
+      const isOpen = overlay.style.display === 'block';
+      overlay.style.display = isOpen ? 'none' : 'block';
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+      if(!isOpen){ setTimeout(()=>{ const firstField = document.querySelector('#appointment-form input, #appointment-form select, #appointment-form textarea'); firstField && firstField.focus(); }, 50); }
     }
-    function closePopup() { document.getElementById("confirmation-popup").style.display = "none"; }
+    function closePopup(){ document.getElementById('confirmation-popup').style.display = 'none'; }
 
-    // Close modal on backdrop click or Esc
+    // backdrop + Esc handlers
     const modalOverlay = document.getElementById('appointment-form');
     modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) toggleForm(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ if(modalOverlay.style.display === 'block') toggleForm(); closePopup(); }});
 
     // Form submit -> Formspree + confirmation
-    const formElement = document.getElementById("inspection-form");
-    if (formElement) {
-      formElement.addEventListener("submit", async function(event) {
+    const formElement = document.getElementById('inspection-form');
+    if(formElement){
+      formElement.addEventListener('submit', async (event)=>{
         event.preventDefault();
         const formData = new FormData(formElement);
         try{
-          const res = await fetch(formElement.action, { method: "POST", body: formData, headers: { 'Accept': 'application/json' }});
-          if (res.ok) {
-            document.getElementById("appointment-form").style.display = "none";
-            document.getElementById("confirmation-popup").style.display = "block";
-            document.body.style.overflow = "";
+          const res = await fetch(formElement.action, { method:'POST', body:formData, headers:{ 'Accept':'application/json' }});
+          if(res.ok){
+            document.getElementById('appointment-form').style.display = 'none';
+            document.getElementById('confirmation-popup').style.display = 'block';
+            document.body.style.overflow = '';
             formElement.reset();
-          } else { alert("There was a problem submitting the form. Please try again later."); }
-        }catch(err){ alert("There was an error sending your request."); console.error(err); }
+          }else{ alert('There was a problem submitting the form. Please try again later.'); }
+        }catch(err){ alert('There was an error sending your request.'); console.error(err); }
       });
     }
   </script>
