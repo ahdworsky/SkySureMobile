@@ -30,31 +30,99 @@
     }
     nav { width:100%; text-align:center; font-weight:700; }
     nav a { color:#fff; text-decoration:none; margin:0 15px; padding:8px 0; display:inline-block; }
+
     .cta-top-left { position: fixed; top: 60px; left: 12px; z-index:1003; }
     .cta-top-left button { background:var(--brand); color:#fff; border:0; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; }
+
     #appointment-form { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1006; padding:20px; }
     #appointment-form .modal-card{ background:#fff; padding:20px; border-radius:12px; max-width:560px; width:100%; margin:8vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
     #appointment-form .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
     #appointment-form input, #appointment-form select, #appointment-form textarea{ width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit; }
     #appointment-form button{ background:var(--brand); color:#fff; border:0; border-radius:10px; padding:12px 16px; font-weight:700; cursor:pointer; width:100%; }
+
     #confirmation-popup{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1007; padding:20px; text-align:center; }
     #confirmation-popup .confirm-card{ background:#fff; border:2px solid var(--brand); border-radius:12px; padding:28px; max-width:420px; width:100%; margin:20vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
     #confirmation-popup .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
+
     header { text-align:center; padding: 8px 20px 0; }
     #main-logo { max-width:320px; height:auto; display:block; margin:0 auto -8px; transition: all .35s ease; }
+
     section { padding: 30px; margin-top: 24px; }
     h2 { color: var(--brand); }
     #services h2, #about h2 { color: var(--accent); }
     #about h2{ font-weight:800; font-size:clamp(1.6rem, 3.5vw, 2.1rem); letter-spacing:.2px; }
+
     .service-grid{ display:grid; grid-template-columns:1fr; gap:30px; margin:0 auto; max-width:1000px; }
     .service-box{ background:#ffffffcc; padding:25px; border-radius:15px; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,0.1); position:relative; }
+
     .content-card{ background:rgba(255,255,255,.92); padding:20px; border-radius:16px; box-shadow:0 4px 10px rgba(0,0,0,.12); max-width:900px; margin:0 auto; position:relative; }
     .card-wrap{ position:relative; }
     .corner-logo{ position:absolute; width: clamp(72px, 14vw, 110px); height:auto; opacity:.95; pointer-events:none; }
     .corner-outside{ top:-28px; right:0; transform: translate(40%, -50%); }
+
     footer { background:var(--brand); color:#fff; text-align:center; padding:15px; font-size:.9rem; }
+
     @media (min-width: 700px){ .service-grid{ grid-template-columns: repeat(2, 1fr); } }
     @media (min-width: 1000px){ .service-grid{ grid-template-columns: repeat(3, 1fr); } }
+
+    /* --- Prevent nav wrapping / keep it tidy across orientations --- */
+    .nav-container {
+      /* fixed height + safe-area support so nothing shifts on rotate */
+      padding: calc(env(safe-area-inset-top, 0px) + 8px) 16px 8px;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(12px, 4vw, 28px);
+      font-weight: 700;
+      /* keep items on one line, allow horizontal scroll if ever needed */
+      white-space: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;        /* Firefox */
+    }
+    nav::-webkit-scrollbar { display: none; } /* WebKit */
+
+    nav a {
+      display: inline-block;
+      margin: 0;                    /* gap handles spacing */
+      padding: 8px 0;
+      font-size: clamp(.9rem, 2.2vw, 1rem);
+    }
+
+    /* Make sure the CTA button never overlaps the nav on cramped heights */
+    .cta-top-left { top: 64px; }
+
+    /* --- Landscape-specific adjustments for short viewports --- */
+    @media screen and (orientation: landscape) and (max-height: 500px) {
+      body {
+        padding-top: 120px;           /* free vertical space */
+        background-size: cover;
+      }
+      #main-logo {                    /* smaller logo in landscape */
+        max-width: 240px;
+        margin-bottom: 0;
+      }
+      section {
+        padding: 20px;
+        margin-top: 16px;
+      }
+      .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .cta-top-left { top: 56px; }    /* nudge under the fixed nav */
+      nav { gap: clamp(10px, 2.8vw, 20px); }
+      nav a { font-size: clamp(.85rem, 1.8vw, .95rem); }
+    }
+
+    /* Extra tiny devices in landscape (really short screens) */
+    @media screen and (orientation: landscape) and (max-height: 380px) {
+      body { padding-top: 100px; }
+      #main-logo { max-width: 200px; }
+      .corner-logo { width: clamp(60px, 12vw, 90px); }
+    }
   </style>
 </head>
 <body>
@@ -167,9 +235,11 @@
       document.body.style.overflow = isOpen ? "" : "hidden";
     }
     function closePopup() { document.getElementById("confirmation-popup").style.display = "none"; }
+
     const modalOverlay = document.getElementById('appointment-form');
     modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) toggleForm(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ if(modalOverlay.style.display === 'block') toggleForm(); closePopup(); }});
+
     const formElement = document.getElementById("inspection-form");
     if (formElement) {
       formElement.addEventListener("submit", async function(event) {
