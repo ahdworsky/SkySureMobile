@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>SkySure Inspections</title>
   <style>
     html { scroll-behavior: smooth; }
@@ -14,11 +14,17 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding-top: 180px;
+      padding-top: calc(180px + env(safe-area-inset-top, 0px));
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
       color: var(--ink);
-      background: url('Background.png') no-repeat center center fixed;
+      background-color: var(--brand);
+      background-image: url('Background.png');
+      background-repeat: no-repeat;
+      background-position: center center;
       background-size: cover;
-      background-attachment: scroll;
+      background-attachment: scroll; /* avoid iOS gaps */
+      min-height: 100svh; /* fill iOS landscape */
       overflow-x: hidden;
     }
     .nav-container {
@@ -26,7 +32,7 @@
       position: fixed; top: 0; left: 0; right: 0;
       z-index: 1005;
       display: flex; align-items: center; justify-content: center;
-      padding: 8px 10px;
+      padding: calc(env(safe-area-inset-top, 0px) + 8px) calc(env(safe-area-inset-right, 0px) + 16px) 8px calc(env(safe-area-inset-left, 0px) + 16px);
     }
     nav { width:100%; text-align:center; font-weight:700; }
     nav a { color:#fff; text-decoration:none; margin:0 15px; padding:8px 0; display:inline-block; }
@@ -97,9 +103,21 @@
     /* --- Landscape-specific adjustments for short viewports --- */
     @media screen and (orientation: landscape) and (max-height: 500px) {
       body {
-        padding-top: 120px;           /* free vertical space */
+        padding-top: calc(120px + env(safe-area-inset-top, 0px));
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
         background-size: cover;
       }
+      #main-logo {
+        max-width: 240px;
+        margin-bottom: 0;
+      }
+      section { padding: 20px; margin-top: 16px; }
+      .service-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .cta-top-left { top: calc(56px + env(safe-area-inset-top, 0px)); }
+      nav { gap: clamp(10px, 2.8vw, 20px); }
+      nav a { font-size: clamp(.85rem, 1.8vw, .95rem); }
+    }
       #main-logo {                    /* smaller logo in landscape */
         max-width: 240px;
         margin-bottom: 0;
@@ -119,7 +137,10 @@
 
     /* Extra tiny devices in landscape (really short screens) */
     @media screen and (orientation: landscape) and (max-height: 380px) {
-      body { padding-top: 100px; }
+      body { padding-top: calc(100px + env(safe-area-inset-top, 0px)); }
+      #main-logo { max-width: 200px; }
+      .corner-logo { width: clamp(60px, 12vw, 90px); }
+    }
       #main-logo { max-width: 200px; }
       .corner-logo { width: clamp(60px, 12vw, 90px); }
     }
