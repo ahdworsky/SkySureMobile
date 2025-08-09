@@ -16,236 +16,73 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      /* Reduced huge padding; responsive for mobile */
-      padding-top: 340px;
+      padding-top: 240px; /* saner header spacing */
       color: var(--ink);
       background: url('Background.png') no-repeat center center fixed;
       background-size: cover;
-      position: relative;
+      background-attachment: scroll; /* avoid iOS jank */
       overflow-x: hidden;
-      background-color: transparent;
     }
 
-    /* Avoid iOS jank for fixed backgrounds */
-    @media (max-width: 700px){
-      body{ padding-top: 200px; background-attachment: scroll; }
-    }
-
+    /* --- Top Nav --- */
     .nav-container {
       background-color: var(--brand);
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1005; /* ABOVE header/logo so all links show */
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1005;
+      display: flex; align-items: center; justify-content: center;
       padding: 8px 10px;
     }
+    nav { width:100%; text-align:center; font-weight:700; }
+    nav a { color:#fff; text-decoration:none; margin:0 15px; padding:8px 0; display:inline-block; }
 
-    nav {
-      background: transparent;
-      width: 100%;
-      text-align: center;
-      font-weight: bold;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-      display: inline-block;
-      padding: 8px 0;
-    }
+    /* --- CTA --- */
+    .cta-top-left { position: fixed; top: 60px; left: 12px; z-index:1003; }
+    .cta-top-left button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; }
 
-    .cta-top-left {
-      position: fixed;
-      top: 75px;
-      left: 20px;
-      z-index: 1003;
-    }
-    .cta-top-left button {
-      background-color: var(--accent);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
+    /* --- Modal (Appointment Form) --- */
+    #appointment-form { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1006; padding:20px; }
+    #appointment-form .modal-card{ background:#fff; padding:20px; border-radius:12px; max-width:560px; width:100%; margin:8vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
+    #appointment-form .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
+    #appointment-form input, #appointment-form select, #appointment-form textarea{ width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit; }
+    #appointment-form button{ background:var(--brand); color:#fff; border:0; border-radius:10px; padding:12px 16px; font-weight:700; cursor:pointer; width:100%; }
 
-    /* Modal overlay + card */
-    #appointment-form {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 1006;
-      padding: 20px;
-    }
-    #appointment-form .modal-card{
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 560px;
-      width: 100%;
-      margin: 8vh auto 0;
-      position: relative;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-    #appointment-form .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 1;
-    }
-    #appointment-form input,
-    #appointment-form select,
-    #appointment-form textarea {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font: inherit;
-    }
-    #appointment-form button {
-      background-color: var(--brand);
-      color: white;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-    }
+    /* --- Confirmation Popup --- */
+    #confirmation-popup{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1007; padding:20px; text-align:center; }
+    #confirmation-popup .confirm-card{ background:#fff; border:2px solid var(--brand); border-radius:12px; padding:28px; max-width:420px; width:100%; margin:20vh auto 0; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.3); }
+    #confirmation-popup .close-btn{ position:absolute; top:10px; right:15px; font-size:20px; font-weight:700; cursor:pointer; line-height:1; }
 
-    /* Confirmation overlay + card */
-    #confirmation-popup {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 1007;
-      padding: 20px;
-      text-align: center;
-    }
-    #confirmation-popup .confirm-card{
-      background-color: white;
-      border: 2px solid var(--brand);
-      border-radius: 10px;
-      padding: 30px;
-      max-width: 420px;
-      width: 100%;
-      margin: 20vh auto 0;
-      position: relative;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-    #confirmation-popup .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 1;
-    }
+    /* --- Header --- */
+    header { text-align:center; padding: 16px 20px 0; }
+    #main-logo { max-width:320px; height:auto; display:block; margin:0 auto; transition: all .35s ease; }
 
-    /* Header (not fixed) */
-    header {
-      background-color: transparent;
-      padding: 10px 20px 0;
-      text-align: center;
-      position: relative;
-      width: 100%;
-      height: auto;
-      z-index: 1002;
-    }
-    header img {
-      max-width: 300px;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-      background: transparent;
-      transition: all 0.35s ease;
-    }
-
-    /* Small corner logo (used briefly, then hidden) */
-    .logo-fixed-small{
-      max-width: 150px !important;
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      margin: 0 !important;
-      z-index: 1008;
-      transition: transform .35s ease, opacity .35s ease;
-    }
-
-    section {
-      padding: 30px;
-      background-color: transparent;
-      margin-top: 40px;
-      border-radius: 8px;
-      position: relative;
-    }
+    /* --- Sections --- */
+    section { padding: 30px; margin-top: 24px; }
     h2 { color: var(--brand); }
 
-    /* Stronger About header for visibility */
-    #about h2{
-      font-weight: 800;
-      font-size: clamp(1.6rem, 3.5vw, 2.1rem);
-      letter-spacing: .2px;
-    }
+    /* Stronger About header */
+    #about h2{ font-weight:800; font-size:clamp(1.6rem, 3.5vw, 2.1rem); letter-spacing:.2px; }
 
-    /* White card for readability */
-    .content-card{
-      background: rgba(255,255,255,.92);
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,.12);
-      max-width: 900px;
-      margin: 0 auto;
-    }
+    /* --- Services Grid --- */
+    .service-grid{ display:grid; grid-template-columns:1fr; gap:30px; margin:0 auto; max-width:1000px; }
+    .service-box{ background:#ffffffcc; padding:25px; border-radius:15px; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,.1); position:relative; }
 
-    footer {
-      background-color: var(--brand);
-      color: white;
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      position: relative;
-    }
+    /* --- About Card --- */
+    .content-card{ background:rgba(255,255,255,.92); padding:20px; border-radius:16px; box-shadow:0 4px 10px rgba(0,0,0,.12); max-width:900px; margin:0 auto; position:relative; }
 
-    strong { color: var(--accent); }
+    /* --- Corner logos outside boxes --- */
+    .card-wrap{ position:relative; }
+    .corner-logo{ position:absolute; width: clamp(44px, 8vw, 64px); height:auto; opacity:.95; pointer-events:none; }
+    /* Anchor outside the top-right corner: a bit up and to the right */
+    .corner-outside{ top:0; right:0; transform: translate(40%, -40%); }
 
-    .service-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
-      margin: 0 auto;
-      max-width: 1000px;
-    }
-    .service-box {
-      background-color: #ffffffcc;
-      padding: 25px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+    footer { background:var(--brand); color:#fff; text-align:center; padding:15px; font-size:.9rem; }
 
-    /* Make two cols on midsize, three on wide */
-    @media (min-width: 700px){
-      .service-grid{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1000px){
-      .service-grid{ grid-template-columns: repeat(3, 1fr); }
-    }
+    @media (min-width: 700px){ .service-grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px){ .service-grid{ grid-template-columns: repeat(3, 1fr); } }
   </style>
 </head>
 <body>
+  <!-- Top Nav -->
   <div class="nav-container">
     <nav>
       <a href="#top">Home</a>
@@ -254,10 +91,12 @@
     </nav>
   </div>
 
+  <!-- CTA button -->
   <div class="cta-top-left">
     <button onclick="toggleForm()">Schedule an Inspection</button>
   </div>
 
+  <!-- Modal: Appointment Form -->
   <div id="appointment-form" role="dialog" aria-modal="true" aria-labelledby="formTitle">
     <div class="modal-card">
       <span class="close-btn" onclick="toggleForm()" aria-label="Close">&times;</span>
@@ -280,58 +119,71 @@
     </div>
   </div>
 
+  <!-- Header / hero logo -->
   <header id="top">
-    <img
-      id="main-logo"
-      src="Final_Logo_Transparent.png"
-      alt="SkySure Inspections Logo"
-      onerror="this.onerror=null; this.src='Final_Logo.png';"
-      style="background-color: transparent;"
-    />
+    <img id="main-logo" src="Final_Logo_Transparent.png" alt="SkySure Inspections Logo" onerror="this.onerror=null; this.src='Final_Logo.png';" />
   </header>
 
-  <section id="services" style="scroll-margin-top: 100px;">
+  <!-- Services -->
+  <section id="services" style="scroll-margin-top: 96px;">
     <h2>Services</h2>
     <div class="service-grid">
-      <div class="service-box">
-        <h3>Roof Snapshot</h3>
-        <p>High-resolution aerial imagery for a quick overview of your roof’s condition.</p>
-        <p><strong>$125 / $175</strong></p>
+
+      <!-- Roof Snapshot wrapped so the outside corner logo can anchor to it -->
+      <div class="card-wrap">
+        <div class="service-box" id="roof-snapshot">
+          <h3>Roof Snapshot</h3>
+          <p>High-resolution aerial imagery for a quick overview of your roof’s condition.</p>
+          <p><strong>$125 / $175</strong></p>
+        </div>
+        <!-- outside, upper-right -->
+        <img class="corner-logo corner-outside" src="Final_Logo_Transparent.png" alt="" onerror="this.style.display='none'" />
       </div>
+
       <div class="service-box">
         <h3>Detailed Roof Report</h3>
         <p>In-depth drone imaging documenting wear or damage—great for buyers or sellers.</p>
         <p><strong>$150 / $200</strong></p>
       </div>
+
       <div class="service-box">
         <h3>Realtor Marketing Add-On</h3>
         <p>Aerial footage to elevate your listing with dramatic views and visual clarity.</p>
         <p><strong>$50 Add-On</strong></p>
       </div>
+
       <div class="service-box">
         <h3>Land Survey Flyover</h3>
         <p>Visualize property lines, terrain, and boundaries for undeveloped or large parcels.</p>
         <p><strong>Quote Required</strong></p>
       </div>
+
       <div class="service-box">
         <h3>Insurance Claim Documentation</h3>
         <p>Capture detailed roof damage imagery to support faster, smoother claim resolution.</p>
         <p><strong>$150 Flat Rate</strong></p>
       </div>
+
     </div>
   </section>
 
-  <section id="about" style="scroll-margin-top: 100px;">
+  <!-- About -->
+  <section id="about" style="scroll-margin-top: 96px;">
     <h2>About SkySure</h2>
-    <div class="content-card">
-      <p>
-        SkySure Inspections was created to give buyers, sellers, homeowners, and real estate agents peace of mind by offering a bird’s-eye view of one of the most expensive components of a home—the roof. With drone technology, we provide sharp aerial imagery that shows roof condition, potential damage, and layout before making an offer or listing a property. Our mission is to deliver fast, visual confidence from above.
-      </p>
+    <div class="card-wrap">
+      <div class="content-card">
+        <p>
+          SkySure Inspections was created to give buyers, sellers, homeowners, and real estate agents peace of mind by offering a bird’s-eye view of one of the most expensive components of a home—the roof. With drone technology, we provide sharp aerial imagery that shows roof condition, potential damage, and layout before making an offer or listing a property. Our mission is to deliver fast, visual confidence from above.
+        </p>
+      </div>
+      <!-- outside, upper-right of the about white box -->
+      <img class="corner-logo corner-outside" src="Final_Logo_Transparent.png" alt="" onerror="this.style.display='none'" />
     </div>
   </section>
 
   <div style="height: 300px;"></div>
 
+  <!-- Footer -->
   <footer>
     FAA Part 107 Certified | Insured | Not a home inspection – just a clear, sky-high view of what matters most.<br><br>
     <strong>Email:</strong> aaron@skysure.com<br>
@@ -340,6 +192,7 @@
     <strong>Hours:</strong> M–F 9am–8pm | Sat 9am–6pm | Sun 9am–12pm
   </footer>
 
+  <!-- Confirmation Popup -->
   <div id="confirmation-popup" role="alertdialog" aria-labelledby="confirmTitle">
     <div class="confirm-card">
       <span class="close-btn" onclick="closePopup()" aria-label="Close">&times;</span>
@@ -354,18 +207,12 @@
       overlay.style.display = isOpen ? "none" : "block";
       document.body.style.overflow = isOpen ? "" : "hidden";
     }
-
-    function closePopup() {
-      document.getElementById("confirmation-popup").style.display = "none";
-    }
+    function closePopup() { document.getElementById("confirmation-popup").style.display = "none"; }
 
     // Close modal on backdrop click or Esc
     const modalOverlay = document.getElementById('appointment-form');
     modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) toggleForm(); });
-    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ 
-      if(modalOverlay.style.display === 'block') toggleForm();
-      closePopup();
-    }});
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ if(modalOverlay.style.display === 'block') toggleForm(); closePopup(); }});
 
     // Form submit -> Formspree + confirmation
     const formElement = document.getElementById("inspection-form");
@@ -374,59 +221,18 @@
         event.preventDefault();
         const formData = new FormData(formElement);
         try{
-          const res = await fetch(formElement.action, {
-            method: "POST",
-            body: formData,
-            headers: { 'Accept': 'application/json' }
-          });
+          const res = await fetch(formElement.action, { method: "POST", body: formData, headers: { 'Accept': 'application/json' }});
           if (res.ok) {
             document.getElementById("appointment-form").style.display = "none";
             document.getElementById("confirmation-popup").style.display = "block";
             document.body.style.overflow = "";
             formElement.reset();
-          } else {
-            alert("There was a problem submitting the form. Please try again later.");
-          }
-        }catch(err){
-          alert("There was an error sending your request.");
-          console.error(err);
-        }
+          } else { alert("There was a problem submitting the form. Please try again later."); }
+        }catch(err){ alert("There was an error sending your request."); console.error(err); }
       });
     }
 
-    // ----- Logo: brief "peek" when Services/About are reached, then hide -----
-    const logo = document.getElementById('main-logo');
-    const services = document.getElementById('services');
-    const about = document.getElementById('about');
-
-    function peekLogo(duration = 1200){
-      logo.classList.add('logo-fixed-small');
-      clearTimeout(window.__logoTimer);
-      window.__logoTimer = setTimeout(() => {
-        logo.classList.remove('logo-fixed-small');
-      }, duration);
-    }
-
-    // Show on nav clicks
-    document.querySelectorAll('a[href="#services"], a[href="#about"]').forEach(a => {
-      a.addEventListener('click', () => peekLogo());
-    });
-
-    // Show on manual scroll into sections
-    const observer = new IntersectionObserver((entries) => {
-      for (const e of entries){
-        if (e.isIntersecting) peekLogo();
-      }
-    }, {
-      root: null,
-      rootMargin: '-10% 0px -80% 0px',
-      threshold: 0.01
-    });
-    observer.observe(services);
-    observer.observe(about);
-
-    // (Important) Remove any old scroll handler that kept the logo sticky
-    // If you had one previously, it's now intentionally gone.
+    // No sticky corner logo on scroll; logos are anchored OUTSIDE the two white boxes now.
   </script>
 </body>
 </html>
