@@ -16,7 +16,7 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding-top: 240px; /* saner header spacing */
+      padding-top: 220px; /* moved logo up */
       color: var(--ink);
       background: url('Background.png') no-repeat center center fixed;
       background-size: cover;
@@ -71,9 +71,9 @@
 
     /* --- Corner logos outside boxes --- */
     .card-wrap{ position:relative; }
-    .corner-logo{ position:absolute; width: clamp(44px, 8vw, 64px); height:auto; opacity:.95; pointer-events:none; }
+    .corner-logo{ position:absolute; width: clamp(54px, 10vw, 80px); height:auto; opacity:.95; pointer-events:none; }
     /* Anchor outside the top-right corner: a bit up and to the right */
-    .corner-outside{ top:0; right:0; transform: translate(40%, -40%); }
+    .corner-outside{ top:-10px; right:0; transform: translate(40%, -50%); }
 
     footer { background:var(--brand); color:#fff; text-align:center; padding:15px; font-size:.9rem; }
 
@@ -128,42 +128,34 @@
   <section id="services" style="scroll-margin-top: 96px;">
     <h2>Services</h2>
     <div class="service-grid">
-
-      <!-- Roof Snapshot wrapped so the outside corner logo can anchor to it -->
       <div class="card-wrap">
         <div class="service-box" id="roof-snapshot">
           <h3>Roof Snapshot</h3>
           <p>High-resolution aerial imagery for a quick overview of your roof’s condition.</p>
           <p><strong>$125 / $175</strong></p>
         </div>
-        <!-- outside, upper-right -->
         <img class="corner-logo corner-outside" src="Final_Logo_Transparent.png" alt="" onerror="this.style.display='none'" />
       </div>
-
       <div class="service-box">
         <h3>Detailed Roof Report</h3>
         <p>In-depth drone imaging documenting wear or damage—great for buyers or sellers.</p>
         <p><strong>$150 / $200</strong></p>
       </div>
-
       <div class="service-box">
         <h3>Realtor Marketing Add-On</h3>
         <p>Aerial footage to elevate your listing with dramatic views and visual clarity.</p>
         <p><strong>$50 Add-On</strong></p>
       </div>
-
       <div class="service-box">
         <h3>Land Survey Flyover</h3>
         <p>Visualize property lines, terrain, and boundaries for undeveloped or large parcels.</p>
         <p><strong>Quote Required</strong></p>
       </div>
-
       <div class="service-box">
         <h3>Insurance Claim Documentation</h3>
         <p>Capture detailed roof damage imagery to support faster, smoother claim resolution.</p>
         <p><strong>$150 Flat Rate</strong></p>
       </div>
-
     </div>
   </section>
 
@@ -176,7 +168,6 @@
           SkySure Inspections was created to give buyers, sellers, homeowners, and real estate agents peace of mind by offering a bird’s-eye view of one of the most expensive components of a home—the roof. With drone technology, we provide sharp aerial imagery that shows roof condition, potential damage, and layout before making an offer or listing a property. Our mission is to deliver fast, visual confidence from above.
         </p>
       </div>
-      <!-- outside, upper-right of the about white box -->
       <img class="corner-logo corner-outside" src="Final_Logo_Transparent.png" alt="" onerror="this.style.display='none'" />
     </div>
   </section>
@@ -209,12 +200,10 @@
     }
     function closePopup() { document.getElementById("confirmation-popup").style.display = "none"; }
 
-    // Close modal on backdrop click or Esc
     const modalOverlay = document.getElementById('appointment-form');
     modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) toggleForm(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ if(modalOverlay.style.display === 'block') toggleForm(); closePopup(); }});
 
-    // Form submit -> Formspree + confirmation
     const formElement = document.getElementById("inspection-form");
     if (formElement) {
       formElement.addEventListener("submit", async function(event) {
@@ -231,8 +220,6 @@
         }catch(err){ alert("There was an error sending your request."); console.error(err); }
       });
     }
-
-    // No sticky corner logo on scroll; logos are anchored OUTSIDE the two white boxes now.
   </script>
 </body>
 </html>
