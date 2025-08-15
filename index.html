@@ -284,20 +284,29 @@
 <div id="report-overlay" class="report-overlay" hidden>
   <div class="report-backdrop" data-close="1"></div>
 
-  <div class="report-modal" role="dialog" aria-modal="true" aria-label="Sample Inspection Report">
-    <button class="report-close" type="button" aria-label="Close" data-close="1">×</button>
+<div class="report-modal" role="dialog" aria-modal="true" aria-label="Sample Inspection Report">
+  <button class="report-close" type="button" aria-label="Close" data-close="1">×</button>
 
-    <div class="report-toolbar">
+  <div class="report-toolbar">
+    <div class="left">
       <button class="nav-btn" type="button" id="report-prev" aria-label="Previous page">‹</button>
       <div class="report-counter" id="report-counter">1 / 4</div>
       <button class="nav-btn" type="button" id="report-next" aria-label="Next page">›</button>
     </div>
-
-    <div class="report-frame">
-      <img id="report-image" src="" alt="Sample Report page" />
+    <div class="right">
+      <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
+      <button class="zoom-btn" id="zoom-reset" aria-label="Reset zoom">100%</button>
+      <button class="zoom-btn" id="zoom-in" aria-label="Zoom in">+</button>
     </div>
   </div>
+
+  <div class="report-frame">
+    <img id="report-image" src="" alt="Sample Report page" />
+  </div>
+
+  <div class="thumbs" id="report-thumbs" aria-label="Page thumbnails"></div>
 </div>
+
 
 </body>
 </html>
