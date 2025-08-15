@@ -1256,3 +1256,15 @@ ul.row.serviceList.secon {
 /* Keep site chrome under the overlay */
 .header, .sticky, .navbar, .navigationwrape { z-index: 1000 !important; }
 
+/* Reserve space at top-right so zoom buttons don't sit under the X */
+.report-toolbar {
+  padding-right: 70px !important;
+}
+.report-close {
+  z-index: 3 !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 8px !important;
+  pointer-events: auto !important;
+}
+
