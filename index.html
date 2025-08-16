@@ -279,6 +279,21 @@
 <script src="js/owl.carousel.js"></script> 
 <script type="text/javascript" src="js/script.js"></script>
 <script src="js/custom.js"></script>
+<script>
+// Enforce Schedule buttons open the form reliably
+document.addEventListener('DOMContentLoaded', function(){
+  function hook(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      if (window.toggleForm) window.toggleForm();
+    });
+  }
+  document.querySelectorAll('a,button').forEach(function(el){
+    var txt = (el.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
+    if (txt.includes('schedule an inspection')) { hook(el); }
+  });
+});
+</script>
 
 <!-- Report Lightbox -->
 <div id="report-overlay" class="report-overlay" hidden>
