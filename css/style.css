@@ -1281,7 +1281,7 @@ a.js-open-appt{
 }
 a.js-open-appt:hover,
 a.js-open-appt:focus{
-  background:#1d4ed8 !important;
+  background:#0E1F2F !important;
   color:#fff !important;
 }
 a.js-open-appt:active{ transform: translateY(1px); }
