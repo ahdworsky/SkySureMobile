@@ -1275,7 +1275,7 @@ a.js-open-appt{
   background:#ea5a1f !important;
   color:#fff !important;
   padding:10px 18px;
-  border-radius:6px;
+  border-radius:0;
   text-decoration:none;
   transition: background .15s ease-in-out, transform .05s;
 }
