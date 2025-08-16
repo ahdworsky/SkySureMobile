@@ -54,7 +54,7 @@
                 <li > <a href="#home" > Home</a></li>
                 <li> <a href="#services"> Service</a></li>
                 <li> <a href="#about"> About Us</a></li> 
-                <li><a href="#" onclick="toggleForm(); return false;"> Schedule an Inspection</a></li>  
+                <li><a class="js-open-appt" href="#" > Schedule an Inspection</a></li>  
               </ul>
             </div>
             <div class="clearfix"></div>
@@ -74,7 +74,7 @@
   <div class="banner-content">
      <div class="caption lfl large-title tp-resizeme slidertext1"><span style="color: #ea5a1f;">SkySure Inspections</span></div> 
     <div class="caption lfb large-title tp-resizeme slidertext4"  style="color: #fff;">Because What you Can't See Can Cost You</div> 
-    <div class="readmore mb_none"><a href="#" onclick="toggleForm(); return false;"> Schedule an Inspection</a></div>
+    <div class="readmore mb_none"><a class="js-open-appt" href="#" > Schedule an Inspection</a></div>
   </div>
 </section>
 
@@ -513,6 +513,20 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     });
   });
+});
+</script>
+<script>
+// Hardened handler: open form on any "Schedule an Inspection" click and prevent navigation
+document.addEventListener('click', function(e){
+  var a = e.target.closest('a.js-open-appt');
+  if (!a) return;
+  e.preventDefault();
+  if (window.toggleForm) { window.toggleForm(); }
+  else {
+    var form = document.getElementById('appointment-form');
+    var backdrop = document.getElementById('modal-backdrop');
+    if (form && backdrop) { form.removeAttribute('hidden'); backdrop.removeAttribute('hidden'); }
+  }
 });
 </script>
 </body>
