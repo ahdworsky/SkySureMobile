@@ -45,7 +45,7 @@
                 <li > <a href="#home" class=""> Home</a></li>
                 <li> <a href="#services"> Service</a></li>
                 <li> <a href="#about"> About Us</a></li> 
-                <li> <a href="#" class="readmore" onclick="toggleForm()"> Schedule an Inspection</a></li>  
+                <li> <a href="#" class="readmore" onclick="toggleForm(); return false;"> Schedule an Inspection</a></li>  
               </ul>
             </div>
             <div class="clearfix"></div>
@@ -66,7 +66,7 @@
      <div class="caption lfl large-title tp-resizeme slidertext1"><span style="color: #ea5a1f;">SkySure Inspections</span></div> 
     <div class="caption lfb large-title tp-resizeme slidertext4"  style="color: #fff;">Because What you Can't See Can Cost You</div> 
     <div class="readmore mb_none">
-      <a href="#" onclick="toggleForm()"> Schedule an Inspection</a>
+      <a href="#" onclick="toggleForm(); return false;"> Schedule an Inspection</a>
     </div>
   </div>
 </section>
@@ -295,11 +295,11 @@
     </div>
     <div class="right">
       <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
-      <span class="zoom-label" id="zoom-label" data-zoom-label>100%</span>
+      <button class="zoom-btn" id="zoom-reset" aria-label="Reset zoom">100%</button>
       <button class="zoom-btn" id="zoom-in" aria-label="Zoom in">+</button>
-      <button class="zoom-btn" id="zoom-reset" aria-label="Reset zoom">Reset</button>
     </div>
   </div>
+
   <div class="report-frame">
     <img id="report-image" src="" alt="Sample Report page" />
   </div>
@@ -308,156 +308,5 @@
 </div>
 
 
-<script>
-// --- Report gallery v2.3 (self-contained with live zoom %) ---
-(function () {
-  if (window.__reportV23) return; window.__reportV23 = true;
-
-  window.REPORT_PAGES = window.REPORT_PAGES || [
-    'images/SampleInspectionReport_page1_small.jpg',
-    'images/SampleInspectionReport_page2_small.jpg',
-    'images/SampleInspectionReport_page3_small.jpg',
-    'images/SampleInspectionReport_page4_small.jpg'
-  ];
-
-  var overlay, imgEl, counterEl, idx = 0;
-  var frameEl, prevBtn, nextBtn, thumbsEl;
-  var zoomScale = 1, minZoom = 1, maxZoom = 2.5, zoomStep = 0.25;
-  var isPanning = false, startX = 0, startY = 0, originX = 0, originY = 0;
-  var zoomLabelEl;
-
-  function el(id){ return document.getElementById(id); }
-  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-  function updateZoomLabel(){
-    if (!zoomLabelEl) zoomLabelEl = el('zoom-label') || el('zoom-reset');
-    if (zoomLabelEl) zoomLabelEl.textContent = Math.round(zoomScale * 100) + '%';
-  }
-
-  function setImage(i){
-    idx = clamp(i, 0, window.REPORT_PAGES.length - 1);
-    if (!imgEl) imgEl = el('report-image');
-    imgEl.src = window.REPORT_PAGES[idx];
-    if (!counterEl) counterEl = el('report-counter');
-    if (counterEl) counterEl.textContent = (idx + 1) + ' / ' + window.REPORT_PAGES.length;
-    if (!prevBtn) prevBtn = el('report-prev');
-    if (!nextBtn) nextBtn = el('report-next');
-    if (prevBtn) prevBtn.disabled = (idx === 0);
-    if (nextBtn) nextBtn.disabled = (idx === window.REPORT_PAGES.length - 1);
-    [idx - 1, idx + 1].forEach(function(n){ if (n>=0 && n<window.REPORT_PAGES.length){ (new Image()).src = window.REPORT_PAGES[n]; } });
-    resetZoom();
-  }
-
-  function onKey(e){
-    if (overlay.hidden) return;
-    if (e.key === 'Escape') closeReportGallery();
-    else if (e.key === 'ArrowRight') nextReport();
-    else if (e.key === 'ArrowLeft') prevReport();
-    else if (e.key === '+') zoomIn();
-    else if (e.key === '-') zoomOut();
-    else if (e.key === '0') resetZoom();
-  }
-
-  function stopScroll(lock){ document.body.style.overflow = lock ? 'hidden' : ''; }
-
-  function applyTransform(){
-    if (!imgEl) imgEl = el('report-image');
-    imgEl.style.transform = 'translate(' + originX + 'px,' + originY + 'px) scale(' + zoomScale + ')';
-    imgEl.style.transformOrigin = 'center center';
-    var fr = document.querySelector('.report-frame');
-    if (fr) fr.classList.toggle('zoomed', zoomScale > 1);
-    updateZoomLabel();
-  }
-
-  function zoomIn(){ zoomScale = clamp(zoomScale + zoomStep, minZoom, maxZoom); applyTransform(); }
-  function zoomOut(){ zoomScale = clamp(zoomScale - zoomStep, minZoom, maxZoom); if (zoomScale === 1){ originX = 0; originY = 0; } applyTransform(); }
-  function resetZoom(){ zoomScale = 1; originX = 0; originY = 0; applyTransform(); }
-
-  function startPan(e){
-    if (zoomScale === 1) return;
-    isPanning = true;
-    var p = (e.touches && e.touches[0]) || e;
-    startX = p.clientX - originX;
-    startY = p.clientY - originY;
-    e.preventDefault && e.preventDefault();
-  }
-  function movePan(e){
-    if (!isPanning) return;
-    var p = (e.touches && e.touches[0]) || e;
-    originX = p.clientX - startX;
-    originY = p.clientY - startY;
-    applyTransform();
-    e.preventDefault && e.preventDefault();
-  }
-  function endPan(){ isPanning = false; }
-
-  window.openReportGallery = function(startIndex){
-    overlay   = el('report-overlay');
-    imgEl     = el('report-image');
-    counterEl = el('report-counter');
-    frameEl   = document.querySelector('.report-frame');
-    thumbsEl  = el('report-thumbs');
-    prevBtn   = el('report-prev');
-    nextBtn   = el('report-next');
-    zoomLabelEl = el('zoom-label') || el('zoom-reset');
-
-    setImage(startIndex || 0);
-    overlay.hidden = false;
-    stopScroll(true);
-    document.addEventListener('keydown', onKey);
-  };
-
-  window.closeReportGallery = function(){
-    if (!overlay) overlay = el('report-overlay');
-    overlay.hidden = true;
-    stopScroll(false);
-    document.removeEventListener('keydown', onKey);
-  };
-
-  window.nextReport = function(){ setImage(idx + 1); };
-  window.prevReport = function(){ setImage(idx - 1); };
-
-  document.addEventListener('DOMContentLoaded', function(){
-    var root = el('report-overlay'); if (!root) return;
-
-    // Close on any [data-close]
-    root.addEventListener('click', function(e){
-      var closeNode = e.target.closest('[data-close]');
-      if (closeNode){ e.preventDefault(); e.stopPropagation(); closeReportGallery(); }
-    });
-
-    // Controls
-    el('report-prev')?.addEventListener('click', function(e){ e.preventDefault(); window.prevReport(); });
-    el('report-next')?.addEventListener('click', function(e){ e.preventDefault(); window.nextReport(); });
-
-    // Zoom controls
-    el('zoom-in')?.addEventListener('click',  function(e){ e.preventDefault(); zoomIn();  });
-    el('zoom-out')?.addEventListener('click', function(e){ e.preventDefault(); zoomOut(); });
-    el('zoom-reset')?.addEventListener('click', function(e){ e.preventDefault(); resetZoom(); });
-
-    // Double-click / double-tap to zoom
-    var lastTap = 0;
-    frameEl = document.querySelector('.report-frame');
-    frameEl.addEventListener('dblclick', function(){ (zoomScale === 1)? zoomIn() : resetZoom(); });
-    frameEl.addEventListener('touchend', function(e){
-      var now = Date.now();
-      if (now - lastTap < 300){ (zoomScale === 1)? zoomIn() : resetZoom(); }
-      lastTap = now;
-    });
-
-    // Drag/pan when zoomed
-    imgEl = el('report-image');
-    frameEl.addEventListener('mousedown', startPan);
-    frameEl.addEventListener('mousemove', movePan);
-    window.addEventListener('mouseup', endPan);
-    frameEl.addEventListener('touchstart', startPan, {passive:false});
-    frameEl.addEventListener('touchmove', function(e){ movePan(e); if (zoomScale>1) e.preventDefault(); }, {passive:false});
-    frameEl.addEventListener('touchend', endPan);
-
-    // Initialize label to 100% on load
-    updateZoomLabel();
-  });
-})();
-</script>
 </body>
 </html>
