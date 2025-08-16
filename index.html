@@ -22,6 +22,15 @@
 <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
 
  
+<style>
+.report-card { cursor: pointer; }
+</style>
+<style>
+/* Appointment form must appear above all overlays */
+#appointment-form{ z-index: 2147483647 !important; }
+#modal-backdrop{  z-index: 2147483646 !important; }
+[hidden]{ display: none !important; } /* ensure hidden attribute hides elements */
+</style>
 </head>
 <body> 
 
@@ -79,29 +88,29 @@
   <div class="container">
     <h1>Our <span>Service</span></h1>
     <ul class="row serviceList "> 
-      <li class=" col-md-6 col-sm-6">
+      <li class=" col-md-6 col-sm-6" class="report-card" onclick="openReportGallery(0); return false;" role="button" tabindex="0">
         <div class="service-image"><img src="images/one.jpg">
           <div class="hoverlink">
-            <div class="icon"><a href="#"><i class="fa fa-link" aria-hidden="true"></i></a></div>
+            <div class="icon"><a href="javascript:void(0)"><i class="fa fa-link" aria-hidden="true"></i></a></div>
           </div>
         </div>
         <div class="service-details">
-          <h3><a href="#">Roof Snapshot</a></h3>
+          <h3><a href="javascript:void(0)">Roof Snapshot</a></h3>
           <p>High-resolution aerial imagery for a quick overview of your roof’s condition.</p>
           <p><b>$125 (≤ 2,500 sq ft) / $175</b></p>
-          <!-- <div class="readmore"><a href="#">Read More</a></div> -->
+          <!-- <div class="readmore"><a href="javascript:void(0)">Read More</a></div> -->
         </div>
       </li>
       <li class=" col-md-6 col-sm-6">
-        <div class="service-image"><a href="javascript:void(0)" onclick="openReportGallery(0)"><img src="images/two.jpg" alt="Detailed Roof Report"></a><div class="hoverlink">
-            <div class="icon"><a href="javascript:void(0)" onclick="openReportGallery(0)"><i class="fa fa-link" aria-hidden="true"></i></a></div>
+        <div class="service-image"><a href="javascript:void(0)" onclick="openReportGallery(0); return false;"><img src="images/two.jpg" alt="Detailed Roof Report"></a><div class="hoverlink">
+            <div class="icon"><a href="javascript:void(0)" onclick="openReportGallery(0); return false;"><i class="fa fa-link" aria-hidden="true"></i></a></div>
           </div>
         </div>
         <div class="service-details">
-          <h3><a href="javascript:void(0)" onclick="openReportGallery(0)">Detailed Roof Report</a></h3>
+          <h3><a href="javascript:void(0)" onclick="openReportGallery(0); return false;">Detailed Roof Report</a></h3>
           <p>In-depth drone imaging documenting wear or damage—great for buyers or sellers.</p>
           <p><b>$150 (≤ 2,500 sq ft) / $200</b></p>
-          <!-- <div class="readmore"><a href="#">Read More</a></div> -->
+          <!-- <div class="readmore"><a href="javascript:void(0)">Read More</a></div> -->
         </div>
       </li> 
     </ul>
@@ -279,21 +288,6 @@
 <script src="js/owl.carousel.js"></script> 
 <script type="text/javascript" src="js/script.js"></script>
 <script src="js/custom.js"></script>
-<script>
-// Enforce Schedule buttons open the form reliably
-document.addEventListener('DOMContentLoaded', function(){
-  function hook(el){
-    el.addEventListener('click', function(e){
-      e.preventDefault();
-      if (window.toggleForm) window.toggleForm();
-    });
-  }
-  document.querySelectorAll('a,button').forEach(function(el){
-    var txt = (el.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
-    if (txt.includes('schedule an inspection')) { hook(el); }
-  });
-});
-</script>
 
 <!-- Report Lightbox -->
 <div id="report-overlay" class="report-overlay" hidden>
@@ -473,6 +467,18 @@ document.addEventListener('DOMContentLoaded', function(){
     updateZoomLabel();
   });
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.report-card[role="button"]').forEach(function(card){
+    card.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (typeof openReportGallery === 'function') openReportGallery(0);
+      }
+    });
+  });
+});
 </script>
 </body>
 </html>
