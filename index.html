@@ -31,6 +31,29 @@
 #modal-backdrop{  z-index: 2147483646 !important; }
 [hidden]{ display: none !important; } /* ensure hidden attribute hides elements */
 </style>
+<style>
+/* Modal centering + backdrop coverage */
+#appointment-form{
+  position: fixed !important;
+  top: 50% !important; left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-width: 90% !important; max-height: 90% !important;
+  overflow-y: auto !important;
+  background: #fff !important;
+  border-radius: 10px !important;
+  padding: 20px !important;
+  z-index: 2147483647 !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35) !important;
+}
+#modal-backdrop{
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,0.6) !important;
+  z-index: 2147483646 !important;
+}
+/* Graceful focus outline for accessibility */
+#appointment-form :focus{ outline: 2px solid #ea5a1f; outline-offset: 2px; }
+</style>
 </head>
 <body> 
 
@@ -527,6 +550,35 @@ document.addEventListener('click', function(e){
     var backdrop = document.getElementById('modal-backdrop');
     if (form && backdrop) { form.removeAttribute('hidden'); backdrop.removeAttribute('hidden'); }
   }
+});
+</script>
+<script>
+// Modal close/open wiring (backdrop + X + Esc)
+document.addEventListener('DOMContentLoaded', function(){
+  var form = document.getElementById('appointment-form');
+  var backdrop = document.getElementById('modal-backdrop');
+  if (!form || !backdrop) return;
+
+  // Click X
+  form.addEventListener('click', function(e){
+    var btn = e.target.closest('.close-btn');
+    if (btn){ e.preventDefault(); if (window.toggleForm) return toggleForm(); form.setAttribute('hidden',''); backdrop.setAttribute('hidden',''); }
+  });
+
+  // Click outside (backdrop)
+  backdrop.addEventListener('click', function(e){
+    e.preventDefault();
+    if (window.toggleForm) return toggleForm();
+    form.setAttribute('hidden',''); backdrop.setAttribute('hidden','');
+  });
+
+  // Escape key
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !form.hasAttribute('hidden')){
+      if (window.toggleForm) return toggleForm();
+      form.setAttribute('hidden',''); backdrop.setAttribute('hidden','');
+    }
+  });
 });
 </script>
 </body>
